@@ -5,3 +5,5 @@ export interface Entry {
   value: number
   completed: boolean
 }
+
+export type NewEntry = Omit<Entry, 'id'>
