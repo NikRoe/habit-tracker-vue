@@ -74,7 +74,7 @@ echtes NestJS-Backend gegen den unten definierten API-Contract
 
 ### Datenmodell (Frontend-Perspektive)
 
-Habit: id, name, frequency (daily | weekly), target_count,
+Habit: id, name, frequency (daily | weekly | bi-weekly | monthly), target_count,
 unit (z. B. "mal" | "seiten" | "kapitel" | "minuten"),
 color (Enum aus fester Palette, z. B. "blue" | "green" | "red" | ...),
 created_at
@@ -98,6 +98,11 @@ Seitenzahl), completed (abgeleitet aus value >= target_count)
   "30 Seiten lesen". Deshalb braucht `Habit` ein `unit`-Feld und `Entry`
   ein numerisches `value`-Feld statt nur `completed: boolean` –
   `completed` wird daraus abgeleitet.
+- **frequency erweitert um `bi-weekly` und `monthly`** (über die
+  ursprünglich geplanten `daily`/`weekly` hinaus) – bewusste Erweiterung.
+  Wichtig für später: die Streak-Berechnung in der Statistik-View wird
+  dadurch komplexer, da unterschiedliche Rhythmen unterschiedliche
+  Regeln brauchen, wann ein Streak als gebrochen gilt.
 
 ### Views
 
@@ -125,8 +130,37 @@ Warte dann auf meinen Code.
 
 ### Abgeschlossen
 
-— Neues Projekt, noch nichts abgeschlossen —
+1. Projekt-Setup: Vite + Vue 3 + TypeScript + Vue Router + Pinia
+   (via `npm create vue@latest`), npm als Paketmanager
+2. Tailwind CSS v4 Integration (`@tailwindcss/vite`)
+3. Ordnerstruktur angelegt: `views/`, `components/`, `composables/`,
+   `types/`, `stores/`
+4. Basic Routing: drei named Routes (`dashboard`, `habits`, `stats`),
+   `RouterView`/`RouterLink` in `App.vue`, mit Test (Router-Plugin im
+   Test, `RouterLinkStub`) abgesichert
 
-### Ausstehend
+### Ausstehend (grobe Reihenfolge)
 
-— alles —
+1. TypeScript-Typen für das Datenmodell (`Habit`, `Entry`) in `src/types/`
+   definieren
+2. Pinia Stores für Habits und Entries (State, Getters, Actions) –
+   bewusste Entscheidung Setup-Store vs. Options-Store
+3. Mocking-Layer mit MSW aufsetzen: Handler für den API-Contract
+   (`GET/POST/PATCH/DELETE /habits`, `GET /habits/:id/entries`,
+   `POST /entries`, `GET /stats/streaks`)
+4. Composables extrahieren (z. B. `useHabits`, `useStreak`) –
+   wiederverwendbare Logik aus Stores/Components herauslösen
+5. Dashboard-View: heutige/fällige Habits anzeigen, schnelles Abhaken
+6. Habit-Verwaltung-View: Liste, Anlegen (Formular), Bearbeiten,
+   Löschen – Component Communication (Props/Emit) zwischen
+   Listen- und Formular-Komponenten
+7. Statistik-View: Streaks pro Habit, Wochenübersicht als einfaches
+   Chart
+8. Vue Router vertiefen: Nested Routes (z. B. Habit-Detail als
+   Kind-Route), Route Guards, Params vs. Query
+9. provide/inject für tiefer verschachtelte Component-Kommunikation
+   (konkretes Beispiel finden, das nicht einfach über den Store läuft)
+10. Tests ergänzen: Komponenten-Tests (Vue Testing Library),
+    Store-Tests, Composable-Tests
+11. Später: echte NestJS-Anbindung anstelle von MSW (API-Client
+    austauschen, Contract bleibt gleich)
