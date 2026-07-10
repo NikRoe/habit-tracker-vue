@@ -144,25 +144,32 @@ Warte dann auf meinen Code.
    `src/stores/entries.ts`) – Options-Store-Syntax, State jeweils als
    Objekt mit benannter Property (`{ habits: [...] }` /
    `{ entries: [...] }`, nicht als nacktes Array)
+7. Mocking-Layer mit MSW (`src/mocks/handlers.ts`, `browser.ts`,
+   `habits.ts`, `entries.ts`) – eigene In-Memory-"Datenbank" getrennt
+   vom Pinia-Store, Handler für den kompletten API-Contract
+   (`GET/POST/PATCH/DELETE /habits`, `GET /habits/:id/entries`,
+   `POST /entries`, `GET /stats/streaks` als Platzhalter). Server
+   generiert IDs selbst (`getNextId`, Max-ID + 1). Eigene Request-Payload-
+   Typen `NewHabit`/`NewEntry` (`Omit<Habit/Entry, 'id'>`) in
+   `src/types/`, da der Client die `id` nicht mitschicken soll
 
 ### Ausstehend (grobe Reihenfolge)
 
-1. Mocking-Layer mit MSW aufsetzen: Handler für den API-Contract
-   (`GET/POST/PATCH/DELETE /habits`, `GET /habits/:id/entries`,
-   `POST /entries`, `GET /stats/streaks`)
-2. Composables extrahieren (z. B. `useHabits`, `useStreak`) –
-   wiederverwendbare Logik aus Stores/Components herauslösen
-3. Dashboard-View: heutige/fällige Habits anzeigen, schnelles Abhaken
-4. Habit-Verwaltung-View: Liste, Anlegen (Formular), Bearbeiten,
+1. Composables extrahieren (z. B. `useHabits`, `useStreak`) –
+   wiederverwendbare Logik aus Stores/Components herauslösen; hier wird
+   der Store erstmals tatsächlich per `fetch` an die MSW-Handler
+   angebunden (bisher arbeitet der Store noch auf rein lokalem State)
+2. Dashboard-View: heutige/fällige Habits anzeigen, schnelles Abhaken
+3. Habit-Verwaltung-View: Liste, Anlegen (Formular), Bearbeiten,
    Löschen – Component Communication (Props/Emit) zwischen
    Listen- und Formular-Komponenten
-5. Statistik-View: Streaks pro Habit, Wochenübersicht als einfaches
+4. Statistik-View: Streaks pro Habit, Wochenübersicht als einfaches
    Chart
-6. Vue Router vertiefen: Nested Routes (z. B. Habit-Detail als
+5. Vue Router vertiefen: Nested Routes (z. B. Habit-Detail als
    Kind-Route), Route Guards, Params vs. Query
-7. provide/inject für tiefer verschachtelte Component-Kommunikation
+6. provide/inject für tiefer verschachtelte Component-Kommunikation
    (konkretes Beispiel finden, das nicht einfach über den Store läuft)
-8. Tests ergänzen: Komponenten-Tests (Vue Testing Library),
+7. Tests ergänzen: Komponenten-Tests (Vue Testing Library),
    Store-Tests, Composable-Tests
-9. Später: echte NestJS-Anbindung anstelle von MSW (API-Client
+8. Später: echte NestJS-Anbindung anstelle von MSW (API-Client
    austauschen, Contract bleibt gleich)
