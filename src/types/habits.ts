@@ -8,6 +8,8 @@ export interface Habit {
   createdAt: string
 }
 
+export type NewHabit = Omit<Habit, 'id'>
+
 type HabitFrequency = 'daily' | 'weekly' | 'bi-weekly' | 'monthly'
 
 type HabitUnit = 'times' | 'pages' | 'chapters' | 'minutes'

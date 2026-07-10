@@ -138,29 +138,31 @@ Warte dann auf meinen Code.
 4. Basic Routing: drei named Routes (`dashboard`, `habits`, `stats`),
    `RouterView`/`RouterLink` in `App.vue`, mit Test (Router-Plugin im
    Test, `RouterLinkStub`) abgesichert
+5. TypeScript-Typen für das Datenmodell (`Habit`, `Entry`) in
+   `src/types/` definiert (camelCase, bewusst backend-agnostisch)
+6. Pinia Stores für Habits und Entries (`src/stores/habits.ts`,
+   `src/stores/entries.ts`) – Options-Store-Syntax, State jeweils als
+   Objekt mit benannter Property (`{ habits: [...] }` /
+   `{ entries: [...] }`, nicht als nacktes Array)
 
 ### Ausstehend (grobe Reihenfolge)
 
-1. TypeScript-Typen für das Datenmodell (`Habit`, `Entry`) in `src/types/`
-   definieren
-2. Pinia Stores für Habits und Entries (State, Getters, Actions) –
-   bewusste Entscheidung Setup-Store vs. Options-Store
-3. Mocking-Layer mit MSW aufsetzen: Handler für den API-Contract
+1. Mocking-Layer mit MSW aufsetzen: Handler für den API-Contract
    (`GET/POST/PATCH/DELETE /habits`, `GET /habits/:id/entries`,
    `POST /entries`, `GET /stats/streaks`)
-4. Composables extrahieren (z. B. `useHabits`, `useStreak`) –
+2. Composables extrahieren (z. B. `useHabits`, `useStreak`) –
    wiederverwendbare Logik aus Stores/Components herauslösen
-5. Dashboard-View: heutige/fällige Habits anzeigen, schnelles Abhaken
-6. Habit-Verwaltung-View: Liste, Anlegen (Formular), Bearbeiten,
+3. Dashboard-View: heutige/fällige Habits anzeigen, schnelles Abhaken
+4. Habit-Verwaltung-View: Liste, Anlegen (Formular), Bearbeiten,
    Löschen – Component Communication (Props/Emit) zwischen
    Listen- und Formular-Komponenten
-7. Statistik-View: Streaks pro Habit, Wochenübersicht als einfaches
+5. Statistik-View: Streaks pro Habit, Wochenübersicht als einfaches
    Chart
-8. Vue Router vertiefen: Nested Routes (z. B. Habit-Detail als
+6. Vue Router vertiefen: Nested Routes (z. B. Habit-Detail als
    Kind-Route), Route Guards, Params vs. Query
-9. provide/inject für tiefer verschachtelte Component-Kommunikation
+7. provide/inject für tiefer verschachtelte Component-Kommunikation
    (konkretes Beispiel finden, das nicht einfach über den Store läuft)
-10. Tests ergänzen: Komponenten-Tests (Vue Testing Library),
-    Store-Tests, Composable-Tests
-11. Später: echte NestJS-Anbindung anstelle von MSW (API-Client
-    austauschen, Contract bleibt gleich)
+8. Tests ergänzen: Komponenten-Tests (Vue Testing Library),
+   Store-Tests, Composable-Tests
+9. Später: echte NestJS-Anbindung anstelle von MSW (API-Client
+   austauschen, Contract bleibt gleich)
