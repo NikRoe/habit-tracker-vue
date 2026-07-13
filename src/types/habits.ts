@@ -14,4 +14,4 @@ type HabitFrequency = 'daily' | 'weekly' | 'bi-weekly' | 'monthly'
 
 type HabitUnit = 'times' | 'pages' | 'chapters' | 'minutes'
 
-type HabitColor = 'red' | 'orange' | 'amber' | 'green' | 'teal' | 'blue' | 'indigo' | 'pink'
+export type HabitColor = 'red' | 'orange' | 'amber' | 'green' | 'teal' | 'blue' | 'indigo' | 'pink'
