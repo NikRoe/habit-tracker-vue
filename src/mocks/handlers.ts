@@ -17,11 +17,7 @@ export const handlers = [
     const createdHabit = { ...newHabit, id: getNextId(mockHabits) }
     mockHabits.push(createdHabit)
 
-    return HttpResponse.json({
-      ok: true,
-      message: 'Habit created successfully.',
-      newHabit: createdHabit,
-    })
+    return HttpResponse.json(createdHabit, { status: 201 })
   }),
   http.patch('/habits/:id', async ({ params, request }) => {
     const { id } = params
@@ -36,7 +32,7 @@ export const handlers = [
     }
 
     mockHabits[index] = { ...existingHabit, ...updatedHabit }
-    return HttpResponse.json({ ok: true, message: `Habit with id: ${id} updated.` })
+    return HttpResponse.json({ message: `Habit with id: ${id} updated.` })
   }),
   http.delete('/habits/:id', ({ params }) => {
     const { id } = params
@@ -47,7 +43,7 @@ export const handlers = [
     }
 
     mockHabits.splice(index, 1)
-    return HttpResponse.json({ ok: true, message: `Habit with id: ${id} deleted.` })
+    return HttpResponse.json({ message: `Habit with id: ${id} deleted.` })
   }),
   http.get('/habits/:id/entries', ({ params }) => {
     const { id } = params
@@ -59,11 +55,7 @@ export const handlers = [
     const newEntry = (await request.json()) as NewEntry
     const createdEntry = { ...newEntry, id: getNextId(mockEntries) }
     mockEntries.push(createdEntry)
-    return HttpResponse.json({
-      ok: true,
-      message: 'Entry created successfully.',
-      newEntry: createdEntry,
-    })
+    return HttpResponse.json(createdEntry, { status: 201 })
   }),
   http.get('/stats/streaks', () => {
     return HttpResponse.json([])
