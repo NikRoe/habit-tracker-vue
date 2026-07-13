@@ -8,7 +8,7 @@ export const mockHabits: Habit[] = [
     targetCount: 2,
     unit: 'chapters',
     color: 'amber',
-    createdAt: '10-07-2026',
+    createdAt: '2026-07-10',
   },
   {
     id: 2,
@@ -17,7 +17,7 @@ export const mockHabits: Habit[] = [
     targetCount: 1,
     unit: 'times',
     color: 'green',
-    createdAt: '10-07-2026',
+    createdAt: '2026-07-10',
   },
   {
     id: 3,
@@ -26,6 +26,6 @@ export const mockHabits: Habit[] = [
     targetCount: 2,
     unit: 'times',
     color: 'orange',
-    createdAt: '10-07-2026',
+    createdAt: '2026-07-10',
   },
 ]

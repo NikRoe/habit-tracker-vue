@@ -1,4 +1,4 @@
-import type { Habit } from '@/types/habits'
+import type { Habit, NewHabit } from '@/types/habits'
 import { defineStore } from 'pinia'
 
 const defaultHabits: Habit[] = [
@@ -9,7 +9,7 @@ const defaultHabits: Habit[] = [
     targetCount: 2,
     unit: 'chapters',
     color: 'amber',
-    createdAt: '10-07-2026',
+    createdAt: '2026-07-10',
   },
   {
     id: 2,
@@ -18,7 +18,7 @@ const defaultHabits: Habit[] = [
     targetCount: 1,
     unit: 'times',
     color: 'green',
-    createdAt: '10-07-2026',
+    createdAt: '2026-07-10',
   },
   {
     id: 3,
@@ -27,22 +27,60 @@ const defaultHabits: Habit[] = [
     targetCount: 2,
     unit: 'times',
     color: 'orange',
-    createdAt: '10-07-2026',
+    createdAt: '2026-07-10',
   },
 ]
 
 export const useHabitsStore = defineStore('habits', {
   state: () => ({ habits: defaultHabits }),
   actions: {
-    addHabit(newHabit: Habit) {
-      this.habits.push(newHabit)
+    async fetchHabits() {
+      const response = await fetch('/habits')
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch habits.')
+      }
+
+      this.habits = await response.json()
     },
-    deleteHabit(id: number) {
+    async addHabit(newHabit: NewHabit) {
+      const response = await fetch('/habits', {
+        method: 'POST',
+        body: JSON.stringify(newHabit),
+        headers: { 'Content-Type': 'application/json' },
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to add habit.')
+      }
+
+      const newHabitWithID = await response.json()
+      this.habits.push(newHabitWithID)
+    },
+    async deleteHabit(id: number) {
+      const response = await fetch(`/habits/${id}`, {
+        method: 'DELETE',
+      })
+
+      if (!response.ok) {
+        throw new Error(`Failed to delete habit ${id}`)
+      }
+
       this.habits = this.habits.filter((habit) => habit.id !== id)
     },
-    updateHabit(id: number, updatedHabit: Habit) {
+    async updateHabit(id: number, updatedHabit: Partial<Habit>) {
+      const response = await fetch(`/habits/${id}`, {
+        method: 'PATCH',
+        body: JSON.stringify(updatedHabit),
+        headers: { 'Content-Type': 'application/json' },
+      })
+
+      if (!response.ok) {
+        throw new Error(`Failed to update habit ${id}`)
+      }
+
       this.habits = this.habits.map((habit) => {
-        if (habit.id === id) return updatedHabit
+        if (habit.id === id) return { ...habit, ...updatedHabit }
         return habit
       })
     },
