@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { useHabits } from '@/composables/useHabits'
+import { useEntries } from '@/composables/useEntries'
 import { habitColorClasses } from '@/utils/habitColors'
 
 const { isLoading, fetchError, habits } = useHabits()
+const { checkOffHabit, isSaving, saveError, isHabitDoneToday } = useEntries(habits)
 </script>
 
 <template>
@@ -17,6 +19,18 @@ const { isLoading, fetchError, habits } = useHabits()
         :class="habitColorClasses[habit.color]"
       ></span>
       {{ habit.name }}
+      <button
+        v-if="!isHabitDoneToday(habit.id)"
+        type="button"
+        @click="checkOffHabit(habit)"
+        :disabled="isSaving"
+        :aria-disabled="isSaving"
+        class="cursor-pointer"
+      >
+        Als abgeschlossen markieren
+      </button>
+      <span v-else>☑️</span>
     </li>
   </ul>
+  <p v-if="saveError">Error marking habit as done: {{ saveError.message }}</p>
 </template>
