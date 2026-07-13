@@ -161,20 +161,40 @@ Warte dann auf meinen Code.
    `onMounted`, verwaltet `isLoading`/`fetchError`. Bekanntes,
    akzeptiertes Risiko: mehrere gleichzeitige Consumer würden aktuell
    mehrfach fetchen (Fix bei Bedarf: Request-Deduplizierung im Store)
+10. Entries-Store an MSW angebunden (`addEntry`, `fetchEntriesForHabit`
+    – ersetzt beim Fetch nur die Entries der angefragten `habitId`,
+    Rest bleibt erhalten). `useEntries`-Composable nimmt die
+    `habits`-Ref als Parameter entgegen und lädt darüber per `watch`
+    (ohne `immediate: true` – sonst würde mit den Default-Seed-Habits
+    statt den echten gefetchten Daten gearbeitet) die Entries pro
+    Habit nach. Stellt `isHabitDoneToday(habitId)` und `checkOffHabit`
+    bereit; Datumsfelder laufen über `src/utils/date.ts`
+    (`toDateString`, lokale Zeitzone statt UTC)
+11. Dashboard-View (`src/views/DashboardView.vue`): zeigt alle Habits
+    (Fälligkeits-Filterung bewusst zurückgestellt bis Streak-Logik
+    existiert) mit Farb-Punkt (`src/utils/habitColors.ts`,
+    `Record<HabitColor, string>`, nötig wegen Tailwinds
+    Static-Class-Scanning), Lade-/Fehlerzustand, Abhaken-Button.
+    `isHabitDoneToday` prüft aktuell nur exaktes Datumsmatch – korrekt
+    für `daily`, bei `weekly`/`bi-weekly`/`monthly` bewusst
+    vereinfacht (bekannte Lücke, gehört zur Streak-Logik). Router-Test
+    (`App.spec.ts`) an echte Pinia-Instanz + gestubbten `fetch`
+    angepasst
 
 ### Ausstehend (grobe Reihenfolge)
 
-1. Dashboard-View: heutige/fällige Habits anzeigen, schnelles Abhaken
-2. Habit-Verwaltung-View: Liste, Anlegen (Formular), Bearbeiten,
+1. Habit-Verwaltung-View: Liste, Anlegen (Formular), Bearbeiten,
    Löschen – Component Communication (Props/Emit) zwischen
    Listen- und Formular-Komponenten
-3. Statistik-View: Streaks pro Habit, Wochenübersicht als einfaches
-   Chart (inkl. `useStreak`-Composable)
-4. Vue Router vertiefen: Nested Routes (z. B. Habit-Detail als
+2. Statistik-View: Streaks pro Habit, Wochenübersicht als einfaches
+   Chart (inkl. `useStreak`-Composable). Hier auch die bekannten
+   Lücken aus dem Dashboard lösen: korrekte "fällig/erledigt"-Prüfung
+   für `weekly`/`bi-weekly`/`monthly` (nicht nur exaktes Tages-Match)
+3. Vue Router vertiefen: Nested Routes (z. B. Habit-Detail als
    Kind-Route), Route Guards, Params vs. Query
-5. provide/inject für tiefer verschachtelte Component-Kommunikation
+4. provide/inject für tiefer verschachtelte Component-Kommunikation
    (konkretes Beispiel finden, das nicht einfach über den Store läuft)
-6. Tests ergänzen: Komponenten-Tests (Vue Testing Library),
+5. Tests ergänzen: Komponenten-Tests (Vue Testing Library),
    Store-Tests, Composable-Tests
-7. Später: echte NestJS-Anbindung anstelle von MSW (API-Client
+6. Später: echte NestJS-Anbindung anstelle von MSW (API-Client
    austauschen, Contract bleibt gleich)

@@ -1,10 +1,11 @@
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 
 import { mount, RouterLinkStub } from '@vue/test-utils'
 import App from '../App.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import type { Router } from 'vue-router'
 import { routes } from '@/router'
+import { createPinia } from 'pinia'
 
 let router: Router
 beforeEach(async () => {
@@ -12,6 +13,15 @@ beforeEach(async () => {
     history: createWebHistory(),
     routes: routes,
   })
+
+   vi.stubGlobal(
+    'fetch',
+    vi.fn(async () => ({ ok: true, json: async () => [] })),
+  )
+})
+
+afterEach(() => {
+  vi.unstubAllGlobals()
 })
 
 describe('App', () => {
@@ -25,7 +35,7 @@ describe('App', () => {
         stubs: {
           RouterLink: RouterLinkStub,
         },
-        plugins: [router],
+        plugins: [router, createPinia()],
       },
     })
     expect(wrapper.findComponent(RouterLinkStub).props().to).toBe('/')
